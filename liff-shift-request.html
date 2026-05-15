@@ -490,7 +490,8 @@
 
 <script>
 // ── 設定 ──────────────────────────────────────────────────
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzM3gpz6FZjGcGAH4ex0qtz26MJ1u7CMypyiZJviKnk7HPp9SG3xIRaLb96oYNnS91Z/exec"; // ← GASのURLに置き換え
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzM3gpz6FZjGcGAH4ex0qtz26MJ1u7CMypyiZJviKnk7HPp9SG3xIRaLb96oYNnS91Z/exec";
+const STAFF_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSlpb3LxpCy3edplVyFMLNUbo4gM-8-L_pdezljQVbX3UeynvbHIB114YR5CNUAFZVscWsTjMyU6XZL/pub?gid=0&single=true&output=csv"; // ← GASのURLに置き換え
 const LIFF_ID = "2010102219-fwHhQc8S"; // ← LIFF IDに置き換え
 
 const STAFF_LIST = [
@@ -537,6 +538,35 @@ async function initLiff() {
 
 // ── LINEユーザーIDからスタッフを取得 ──────────────────────
 async function loadStaffByLineId(lineUserId) {
+  try {
+    const res  = await fetch(STAFF_CSV_URL);
+    const text = await res.text();
+    const rows = text.trim().split("\n").slice(1);
+    const staff = rows.map(row => {
+      const cols = row.split(",").map(c => c.trim().replace(/^"|"$/g, ""));
+      return { id: cols[0], name: cols[1], position: cols[2], wage: cols[3], lineUserId: cols[4] };
+    }).find(s => s.lineUserId === lineUserId);
+
+    if (staff) {
+      currentStaff = staff;
+      document.getElementById("staff-name").textContent = `${staff.name}（${staff.position}）`;
+      updateSubmitBtn();
+      return;
+    }
+  } catch(e) {
+    console.log("スタッフ取得エラー:", e);
+  }
+
+  // 見つからない場合はLINE表示名を使用
+  try {
+    const profile = await liff.getProfile();
+    currentStaff = { id: lineUserId, name: profile.displayName, position: "" };
+    document.getElementById("staff-name").textContent = profile.displayName;
+    updateSubmitBtn();
+  } catch(e) {
+    document.getElementById("staff-name").textContent = "名前を取得できませんでした";
+  }
+}
   try {
     const res  = await fetch(`${GAS_URL}?type=staff`);
     const data = await res.json();
