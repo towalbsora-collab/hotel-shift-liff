@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>シフト希望入力</title>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+  :root {
+    --green: #00B900;
+    --green-light: #00D900;
+    --green-dark: #009900;
+    --bg: #F0F4F0;
+    --card: #FFFFFF;
+    --text: #1a1a1a;
+    --text-muted: #888;
+    --border: #E0E8E0;
+    --shadow: 0 2px 12px rgba(0,185,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 120px;
+  }
+
+  /* ヘッダー */
+  .header {
+    background: var(--green);
+    padding: 16px 20px 20px;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,185,0,0.3);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .header-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .header h1 {
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+  }
+  .header-sub {
+    font-size: 11px;
+    opacity: 0.8;
+    margin-left: 42px;
+  }
+
+  /* 月ナビゲーション */
+  .month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .month-nav button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .month-title {
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  /* スタッフ選択 */
+  .staff-section {
+    padding: 14px 16px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .staff-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .staff-select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    appearance: none;
+  }
+  .staff-select:focus {
+    border-color: var(--green);
+  }
+
+  /* シフト種別選択 */
+  .shift-selector {
+    padding: 14px 16px;
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+  }
+  .shift-selector-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+  .shift-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .shift-btn {
+    padding: 10px 4px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    color: var(--text-muted);
+  }
+  .shift-btn .shift-icon { font-size: 18px; display: block; margin-bottom: 3px; }
+  .shift-btn .shift-name { display: block; font-size: 11px; }
+  .shift-btn .shift-time { display: block; font-size: 9px; opacity: 0.7; margin-top: 1px; }
+  .shift-btn.active {
+    border-color: currentColor;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .shift-btn[data-shift="early"].active  { color: #F59E0B; border-color: #F59E0B; background: #FFFBEB; }
+  .shift-btn[data-shift="clean"].active  { color: #10B981; border-color: #10B981; background: #ECFDF5; }
+  .shift-btn[data-shift="front"].active  { color: #3B82F6; border-color: #3B82F6; background: #EFF6FF; }
+  .shift-btn[data-shift="off"].active    { color: #EF4444; border-color: #EF4444; background: #FEF2F2; }
+
+  /* カレンダー */
+  .calendar-wrap {
+    padding: 16px;
+  }
+  .calendar {
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: var(--green);
+  }
+  .cal-dow {
+    padding: 8px 0;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    opacity: 0.9;
+  }
+  .cal-dow.sun { opacity: 1; }
+  .cal-dow.sat { opacity: 0.8; }
+
+  .calendar-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+  .cal-day {
+    background: var(--card);
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.12s;
+    min-height: 46px;
+  }
+  .cal-day.empty {
+    background: var(--bg);
+    cursor: default;
+  }
+  .cal-day.past {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .cal-day.today .day-num {
+    background: var(--green);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .day-num {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .cal-day.sun .day-num { color: #EF4444; }
+  .cal-day.sat .day-num { color: #3B82F6; }
+  .cal-day.today .day-num { color: white !important; }
+
+  .day-shift {
+    font-size: 8px;
+    font-weight: 800;
+    margin-top: 2px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    line-height: 1.4;
+  }
+  .cal-day.selected-early  { background: #FFFBEB; }
+  .cal-day.selected-clean  { background: #ECFDF5; }
+  .cal-day.selected-front  { background: #EFF6FF; }
+  .cal-day.selected-off    { background: #FEF2F2; }
+
+  .day-shift.early { background: #FEF3C7; color: #92400E; }
+  .day-shift.clean { background: #D1FAE5; color: #065F46; }
+  .day-shift.front { background: #DBEAFE; color: #1E40AF; }
+  .day-shift.off   { background: #FEE2E2; color: #991B1B; }
+
+
+
+  /* 送信ボタン */
+  .submit-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: rgba(240,244,240,0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border);
+  }
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 900;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .submit-btn:active { transform: scale(0.98); background: var(--green-dark); }
+  .submit-btn:disabled { background: #CCC; cursor: not-allowed; }
+  .submit-btn .count-badge {
+    background: rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 13px;
+  }
+
+  /* 完了画面 */
+  .success-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 24px;
+    text-align: center;
+  }
+  .success-screen.show { display: flex; }
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(0,185,0,0.3);
+  }
+  .success-title {
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 8px;
+    color: var(--green-dark);
+  }
+  .success-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .success-list {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 16px;
+    width: 100%;
+    max-width: 320px;
+    text-align: left;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .success-list-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .success-list-item {
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+  }
+  .success-list-item:last-child { border-bottom: none; }
+  .close-btn {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 40px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+  }
+
+  /* ローディング */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.9);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 1000;
+  }
+  .loading-overlay.show { display: flex; }
+  .spinner {
+    width: 44px;
+    height: 44px;
+    border: 4px solid var(--border);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 14px; font-weight: 700; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<!-- メイン画面 -->
+<div id="main-screen">
+  <!-- ヘッダー -->
+  <div class="header">
+    <div class="header-top">
+      <div class="header-icon">🏨</div>
+      <h1>シフト希望入力</h1>
+    </div>
+    <div class="header-sub">希望日をカレンダーで選んで送信してください</div>
+  </div>
+
+  <!-- 月ナビ -->
+  <div class="month-nav">
+    <button onclick="changeMonth(-1)">‹</button>
+    <div class="month-title" id="month-title"></div>
+    <button onclick="changeMonth(1)">›</button>
+  </div>
+
+  <!-- スタッフ表示 -->
+  <div class="staff-section">
+    <div class="staff-label">👤 名前</div>
+    <div id="staff-name" style="font-size:15px;font-weight:700;color:#1a1a1a;">読み込み中...</div>
+  </div>
+
+  <!-- シフト種別 -->
+  <div class="shift-selector">
+    <div class="shift-selector-label">▼ シフト種別を選んでからカレンダーをタップ</div>
+    <div class="shift-buttons">
+      <button class="shift-btn active" data-shift="early" onclick="selectShift('early')">
+        <span class="shift-icon">🌅</span>
+        <span class="shift-name">早朝</span>
+        <span class="shift-time">5:30〜9:00</span>
+      </button>
+      <button class="shift-btn" data-shift="clean" onclick="selectShift('clean')">
+        <span class="shift-icon">🧹</span>
+        <span class="shift-name">清掃</span>
+        <span class="shift-time">10:00〜15:00</span>
+      </button>
+      <button class="shift-btn" data-shift="front" onclick="selectShift('front')">
+        <span class="shift-icon">🛎️</span>
+        <span class="shift-name">変則</span>
+        <span class="shift-time">5:30〜23:00</span>
+      </button>
+      <button class="shift-btn" data-shift="off" onclick="selectShift('off')">
+        <span class="shift-icon">🌙</span>
+        <span class="shift-name">休み希望</span>
+        <span class="shift-time">—</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- カレンダー -->
+  <div class="calendar-wrap">
+    <div class="calendar">
+      <div class="calendar-header">
+        <div class="cal-dow sun">日</div>
+        <div class="cal-dow">月</div>
+        <div class="cal-dow">火</div>
+        <div class="cal-dow">水</div>
+        <div class="cal-dow">木</div>
+        <div class="cal-dow">金</div>
+        <div class="cal-dow sat">土</div>
+      </div>
+      <div class="calendar-body" id="calendar-body"></div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- 完了画面 -->
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">✅</div>
+  <div class="success-title">送信完了！</div>
+  <div class="success-sub">シフト希望を受け付けました。<br>管理者が確認後、シフト表に反映されます。</div>
+  <div class="success-list" id="success-list"></div>
+  <button class="close-btn" onclick="closeLiff()">閉じる</button>
+</div>
+
+<!-- 送信ボタン -->
+<div class="submit-bar" id="submit-bar">
+  <button class="submit-btn" id="submit-btn" onclick="submitRequests()" disabled>
+    シフト希望を送信
+  </button>
+</div>
+
+<!-- ローディング -->
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">送信中...</div>
+</div>
+
+<script>
+// ── 設定 ──────────────────────────────────────────────────
+const GAS_URL = "YOUR_GAS_URL_HERE"; // ← GASのURLに置き換え
+const LIFF_ID = "YOUR_LIFF_ID_HERE"; // ← LIFF IDに置き換え
+
+const STAFF_LIST = [
+  { id: "S001", name: "田中 花子", position: "フロント" },
+  { id: "S002", name: "佐藤 一郎", position: "清掃" },
+  { id: "S003", name: "鈴木 美咲", position: "フロント" },
+  { id: "S004", name: "山田 健太", position: "早朝" },
+];
+
+const SHIFTS = {
+  early: { label: "早朝",    time: "5:30〜9:00",   color: "#F59E0B" },
+  clean: { label: "清掃",    time: "10:00〜15:00", color: "#10B981" },
+  front: { label: "変則",    time: "5:30〜23:00",  color: "#3B82F6" },
+  off:   { label: "休み希望", time: "—",            color: "#EF4444" },
+};
+
+const DOW_JP = ["日","月","火","水","木","金","土"];
+
+// ── 状態 ──────────────────────────────────────────────────
+let currentYear  = new Date().getFullYear();
+let currentMonth = new Date().getMonth() + 1;
+let selectedShift = "early";
+let selections   = {};
+let currentStaff = null; // { id, name, position }
+
+// ── LIFF初期化 ────────────────────────────────────────────
+async function initLiff() {
+  try {
+    await liff.init({ liffId: LIFF_ID });
+    if (liff.isLoggedIn()) {
+      const profile = await liff.getProfile();
+      await loadStaffByLineId(profile.userId);
+    } else {
+      liff.login();
+    }
+  } catch (e) {
+    console.log("LIFF初期化エラー（ブラウザプレビュー）:", e);
+    // プレビュー用：最初のスタッフを仮表示
+    currentStaff = STAFF_LIST[0];
+    document.getElementById("staff-name").textContent = `${currentStaff.name}（${currentStaff.position}）`;
+  }
+  renderCalendar();
+}
+
+// ── LINEユーザーIDからスタッフを取得 ──────────────────────
+async function loadStaffByLineId(lineUserId) {
+  try {
+    const res  = await fetch(`${GAS_URL}?type=staff`);
+    const data = await res.json();
+    const staff = data.find(s => s.lineUserId === lineUserId);
+    if (staff) {
+      currentStaff = staff;
+      document.getElementById("staff-name").textContent = `${staff.name}（${staff.position}）`;
+    } else {
+      document.getElementById("staff-name").textContent = "スタッフが見つかりません";
+      document.getElementById("submit-btn").disabled = true;
+    }
+  } catch (e) {
+    // GASに接続できない場合はLINE表示名を使用
+    const profile = await liff.getProfile();
+    currentStaff = { id: lineUserId, name: profile.displayName, position: "" };
+    document.getElementById("staff-name").textContent = profile.displayName;
+  }
+}
+
+// ── 月変更 ────────────────────────────────────────────────
+function changeMonth(delta) {
+  currentMonth += delta;
+  if (currentMonth > 12) { currentMonth = 1;  currentYear++; }
+  if (currentMonth < 1)  { currentMonth = 12; currentYear--; }
+  renderCalendar();
+}
+
+// ── シフト選択 ────────────────────────────────────────────
+function selectShift(shiftId) {
+  selectedShift = shiftId;
+  document.querySelectorAll(".shift-btn").forEach(b => b.classList.remove("active"));
+  document.querySelector(`[data-shift="${shiftId}"]`).classList.add("active");
+}
+
+// ── カレンダー描画 ────────────────────────────────────────
+function renderCalendar() {
+  document.getElementById("month-title").textContent = `${currentYear}年 ${currentMonth}月`;
+
+  const body     = document.getElementById("calendar-body");
+  const today    = new Date();
+  const firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
+  const lastDate = new Date(currentYear, currentMonth, 0).getDate();
+
+  body.innerHTML = "";
+
+  // 空白セル
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement("div");
+    el.className = "cal-day empty";
+    body.appendChild(el);
+  }
+
+  // 日付セル
+  for (let d = 1; d <= lastDate; d++) {
+    const date    = new Date(currentYear, currentMonth - 1, d);
+    const dow     = date.getDay();
+    const dateKey = `${currentYear}-${String(currentMonth).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const isPast  = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const isToday = date.toDateString() === today.toDateString();
+    const shift   = selections[dateKey];
+
+    const el = document.createElement("div");
+    el.className = `cal-day${dow === 0 ? " sun" : dow === 6 ? " sat" : ""}${isPast ? " past" : ""}${isToday ? " today" : ""}${shift ? ` selected-${shift}` : ""}`;
+
+    el.innerHTML = `
+      <div class="day-num">${d}</div>
+      ${shift ? `<div class="day-shift ${shift}">${SHIFTS[shift].label}</div>` : ""}
+    `;
+
+    if (!isPast) {
+      el.addEventListener("click", () => toggleDay(dateKey, dow));
+    }
+
+    body.appendChild(el);
+  }
+
+}
+
+// ── 日付トグル ────────────────────────────────────────────
+function toggleDay(dateKey, dow) {
+  if (selections[dateKey] === selectedShift) {
+    delete selections[dateKey];
+  } else {
+    selections[dateKey] = selectedShift;
+  }
+  renderCalendar();
+  updateSubmitBtn();
+}
+
+// ── 送信ボタン更新 ────────────────────────────────────────
+function updateSubmitBtn() {
+  const btn      = document.getElementById("submit-btn");
+  const count    = Object.keys(selections).length;
+  const canSubmit = currentStaff && count > 0;
+
+  btn.disabled = !canSubmit;
+  btn.innerHTML = canSubmit
+    ? `📤 シフト希望を送信 <span class="count-badge">${count}件</span>`
+    : `シフト希望を送信（日付を選択してください）`;
+}
+
+// ── 送信処理 ──────────────────────────────────────────────
+async function submitRequests() {
+  if (!currentStaff) return;
+  const staffId   = currentStaff.id;
+  const staffName = currentStaff.name;
+  const keys      = Object.keys(selections).sort();
+  if (keys.length === 0) return;
+
+  document.getElementById("loading").classList.add("show");
+
+  try {
+    // GASに送信
+    const rows = keys.map(key => {
+      const sh = SHIFTS[selections[key]];
+      return {
+        receivedAt: new Date().toISOString(),
+        staffId,
+        name:      staffName,
+        date:      key,
+        shiftType: sh.label,
+        startTime: sh.time.split("〜")[0] || "—",
+        endTime:   sh.time.split("〜")[1] || "—",
+        status:    "未確認",
+      };
+    });
+
+    await fetch(GAS_URL, {
+      method:  "POST",
+      mode:    "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ type: "shiftRequests", rows }),
+    });
+
+    // 完了画面表示
+    document.getElementById("loading").classList.remove("show");
+    showSuccess(staffName, keys);
+
+    // LINEに完了メッセージ送信
+    if (liff.isInClient()) {
+      await liff.sendMessages([{
+        type: "text",
+        text: `【シフト希望送信完了】\n${staffName}\n${keys.map(k => {
+          const [y,m,d] = k.split("-");
+          const sh = SHIFTS[selections[k]];
+          return `${parseInt(m)}/${parseInt(d)} ${sh.label}`;
+        }).join("\n")}`
+      }]);
+    }
+
+  } catch (e) {
+    document.getElementById("loading").classList.remove("show");
+    // no-corsモードではエラーが出ても成功している場合があるので完了画面を表示
+    showSuccess(staffName, keys);
+  }
+}
+
+function showSuccess(staffName, keys) {
+  const listHTML = keys.map(key => {
+    const [y, m, d] = key.split("-");
+    const dow = new Date(key).getDay();
+    const sh  = SHIFTS[selections[key]];
+    return `
+      <div class="success-list-item">
+        <span>${parseInt(m)}月${parseInt(d)}日（${DOW_JP[dow]}）</span>
+        <span style="color:${sh.color};font-weight:700">${sh.label}</span>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("success-list").innerHTML = `
+    <div class="success-list-title">📋 ${staffName}さんの送信内容</div>
+    ${listHTML}
+  `;
+
+  document.getElementById("main-screen").style.display = "none";
+  document.getElementById("submit-bar").style.display = "none";
+  document.getElementById("success-screen").classList.add("show");
+}
+
+function closeLiff() {
+  if (liff.isInClient()) {
+    liff.closeWindow();
+  } else {
+    window.close();
+  }
+}
+
+// ── 起動 ──────────────────────────────────────────────────
+initLiff();
+</script>
+</body>
+</html>
