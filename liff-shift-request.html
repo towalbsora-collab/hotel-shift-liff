@@ -542,16 +542,16 @@ async function loadStaffByLineId(lineUserId) {
     const res  = await fetch(STAFF_CSV_URL);
     const text = await res.text();
     const rows = text.trim().split("\n").slice(1);
-    const staff = rows.map(row => {
-      const cols = row.split(",").map(c => c.trim().replace(/^"|"$/g, ""));
-      return { id: cols[0], name: cols[1], position: cols[2], wage: cols[3], lineUserId: cols[4] };
 
-console.log("取得したスタッフ一覧:", rows.map(row => {
+    console.log("LINEユーザーID:", lineUserId);
+    console.log("取得したスタッフ一覧:", rows.map(row => {
       const cols = row.split(",").map(c => c.trim().replace(/^"|"$/g, ""));
       return { lineUserId: cols[4] };
     }));
-    console.log("LINEユーザーID:", lineUserId);      
-    
+
+    const staff = rows.map(row => {
+      const cols = row.split(",").map(c => c.trim().replace(/^"|"$/g, ""));
+      return { id: cols[0], name: cols[1], position: cols[2], wage: cols[3], lineUserId: cols[4] };
     }).find(s => s.lineUserId === lineUserId);
 
     if (staff) {
