@@ -545,6 +545,13 @@ async function loadStaffByLineId(lineUserId) {
     const staff = rows.map(row => {
       const cols = row.split(",").map(c => c.trim().replace(/^"|"$/g, ""));
       return { id: cols[0], name: cols[1], position: cols[2], wage: cols[3], lineUserId: cols[4] };
+
+console.log("取得したスタッフ一覧:", rows.map(row => {
+      const cols = row.split(",").map(c => c.trim().replace(/^"|"$/g, ""));
+      return { lineUserId: cols[4] };
+    }));
+    console.log("LINEユーザーID:", lineUserId);      
+    
     }).find(s => s.lineUserId === lineUserId);
 
     if (staff) {
