@@ -451,19 +451,34 @@ function openPopup(dateKey, dow) {
 function updatePreview() {
   var startMin = parseInt(document.getElementById("popup-start").value);
   var endMin   = parseInt(document.getElementById("popup-end").value);
+  var preview  = document.getElementById("popup-preview");
+
   if (endMin <= startMin) {
-    document.getElementById("popup-preview").textContent = "※ 終了時間は開始時間より後にしてください";
-    document.getElementById("popup-preview").style.background = "#FEF2F2";
-    document.getElementById("popup-preview").style.color = "#EF4444";
-    document.getElementById("popup-preview").style.borderColor = "#FCA5A5";
-  } else {
-    var hours = (endMin - startMin) / 60;
-    document.getElementById("popup-preview").textContent =
-      minToStr(startMin) + "〜" + minToStr(endMin) + "（" + hours.toFixed(1) + "時間）";
-    document.getElementById("popup-preview").style.background = "#EFF6FF";
-    document.getElementById("popup-preview").style.color = "#1E40AF";
-    document.getElementById("popup-preview").style.borderColor = "#BFDBFE";
+    preview.textContent = "※ 終了時間は開始時間より後にしてください";
+    preview.style.background   = "#FEF2F2";
+    preview.style.color        = "#EF4444";
+    preview.style.borderColor  = "#FCA5A5";
+    return;
   }
+
+  var totalHours = (endMin - startMin) / 60;
+  var text = "";
+
+  if (totalHours > 6) {
+    var paidHours = totalHours - 1;
+    text = minToStr(startMin) + "〜" + minToStr(endMin) + "\n" +
+           "拘束 " + totalHours.toFixed(1) + "時間" +
+           "（実働 " + paidHours.toFixed(1) + "時間 ＋ 休憩60分）";
+  } else {
+    text = minToStr(startMin) + "〜" + minToStr(endMin) +
+           "（" + totalHours.toFixed(1) + "時間）";
+  }
+
+  preview.textContent       = text;
+  preview.style.whiteSpace  = "pre-line";
+  preview.style.background  = "#EFF6FF";
+  preview.style.color       = "#1E40AF";
+  preview.style.borderColor = "#BFDBFE";
 }
 
 function confirmPopup() {
