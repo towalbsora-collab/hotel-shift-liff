@@ -179,14 +179,17 @@ function initLiff() {
 }
 
 function loadStaffByLineId(lineUserId) {
+  document.getElementById("staff-name").textContent = "検索中... ID:" + lineUserId.slice(0,8);
   fetch(STAFF_CSV_URL)
     .then(function(res) { return res.text(); })
     .then(function(text) {
       var rows = text.trim().split("\n").slice(1);
       var found = null;
       for (var i = 0; i < rows.length; i++) {
-        var cols = rows[i].split(",").map(function(c) { return c.trim().replace(/^"|"$/g, ""); });
-        if (cols[4] === lineUserId) {
+        var cols = rows[i].split(",").map(function(c) {
+          return c.trim().replace(/^"|"$/g, "");
+        });
+        if (cols[4].trim() === lineUserId.trim()) {
           found = { id: cols[0], name: cols[1], position: cols[2], wage: cols[3], lineUserId: cols[4] };
           break;
         }
@@ -195,26 +198,18 @@ function loadStaffByLineId(lineUserId) {
         currentStaff = found;
         document.getElementById("staff-name").textContent = found.name + "（" + found.position + "）";
       } else {
-        liff.getProfile().then(function(profile) {
-          currentStaff = { id: lineUserId, name: profile.displayName, position: "" };
-          document.getElementById("staff-name").textContent = profile.displayName;
-          updateSubmitBtn();
-        });
+        document.getElementById("staff-name").textContent = "未登録：" + lineUserId.slice(0,8);
+        currentStaff = { id: lineUserId, name: "未登録スタッフ", position: "" };
       }
       updateSubmitBtn();
       renderCalendar();
     })
     .catch(function(e) {
+      document.getElementById("staff-name").textContent = "取得エラー";
       console.log("CSV取得エラー:", e);
-      liff.getProfile().then(function(profile) {
-        currentStaff = { id: lineUserId, name: profile.displayName, position: "" };
-        document.getElementById("staff-name").textContent = profile.displayName;
-        updateSubmitBtn();
-        renderCalendar();
-      });
+      renderCalendar();
     });
 }
-
 function changeMonth(delta) {
   currentMonth += delta;
   if (currentMonth > 12) { currentMonth = 1; currentYear++; }
