@@ -179,7 +179,6 @@ function initLiff() {
 }
 
 function loadStaffByLineId(lineUserId) {
-  document.getElementById("staff-name").textContent = "検索中... ID:" + lineUserId.slice(0,8);
   fetch(STAFF_CSV_URL)
     .then(function(res) { return res.text(); })
     .then(function(text) {
