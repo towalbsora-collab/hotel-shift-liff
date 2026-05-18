@@ -60,72 +60,49 @@
   .day-shift.off   { background: #FEE2E2; color: #991B1B; }
 
   /* ポップアップ */
-  .popup-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5);
-    align-items: flex-end; justify-content: center;
-    z-index: 500;
-  }
+  .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center; z-index: 500; }
   .popup-overlay.show { display: flex; }
-  .popup {
-    background: var(--card);
-    border-radius: 20px 20px 0 0;
-    padding: 20px 20px 40px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
-    animation: slideUp 0.2s ease;
-  }
+  .popup { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px 20px 40px; width: 100%; max-width: 480px; box-shadow: 0 -4px 24px rgba(0,0,0,0.15); animation: slideUp 0.2s ease; }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .popup-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
-  .popup-title { font-size: 16px; font-weight: 900; margin-bottom: 4px; color: var(--text); }
+  .popup-title { font-size: 16px; font-weight: 900; margin-bottom: 4px; }
   .popup-date  { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
   .popup-time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
   .popup-time-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
-  .popup-time-group select {
+  /* 【修正3】input[type="time"] スタイル */
+  .popup-time-group input[type="time"] {
     width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px;
-    font-size: 15px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg); color: var(--text); outline: none; appearance: none;
-    text-align: center;
+    font-size: 16px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg); color: var(--text); outline: none; text-align: center;
+    -webkit-appearance: none; appearance: none;
   }
-  .popup-time-group select:focus { border-color: #3B82F6; }
-  .popup-preview {
-    background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px;
-    padding: 10px 14px; margin-bottom: 16px;
-    font-size: 13px; color: #1E40AF; font-weight: 700; text-align: center;
-  }
+  .popup-time-group input[type="time"]:focus { border-color: #3B82F6; }
+  .popup-preview { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 13px; color: #1E40AF; font-weight: 700; text-align: center; white-space: pre-line; }
+  .popup-preview.error { background: #FEF2F2; border-color: #FCA5A5; color: #EF4444; }
   .popup-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .popup-cancel {
-    padding: 14px; border: 2px solid var(--border); background: var(--bg);
-    border-radius: 12px; font-size: 14px; font-weight: 700;
-    font-family: 'Noto Sans JP', sans-serif; cursor: pointer; color: var(--text-muted);
-  }
-  .popup-confirm {
-    padding: 14px; border: none; background: #3B82F6;
-    border-radius: 12px; font-size: 14px; font-weight: 700;
-    font-family: 'Noto Sans JP', sans-serif; cursor: pointer; color: white;
-  }
-  .popup-delete {
-    width: 100%; padding: 12px; border: none; background: #FEF2F2;
-    border-radius: 12px; font-size: 13px; font-weight: 700;
-    font-family: 'Noto Sans JP', sans-serif; cursor: pointer; color: #EF4444;
-    margin-top: 8px;
-  }
+  .popup-cancel  { padding: 14px; border: 2px solid var(--border); background: var(--bg); border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; color: var(--text-muted); }
+  .popup-confirm { padding: 14px; border: none; background: #3B82F6; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; color: white; }
+  .popup-delete  { width: 100%; padding: 12px; border: none; background: #FEF2F2; border-radius: 12px; font-size: 13px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; color: #EF4444; margin-top: 8px; }
 
   .submit-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: rgba(240,244,240,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); }
   .submit-btn { width: 100%; padding: 16px; background: var(--green); color: white; border: none; border-radius: 14px; font-size: 16px; font-weight: 900; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .submit-btn:disabled { background: #CCC; cursor: not-allowed; }
   .submit-btn .count-badge { background: rgba(255,255,255,0.3); border-radius: 20px; padding: 2px 10px; font-size: 13px; }
+
   .success-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 24px; text-align: center; }
   .success-screen.show { display: flex; }
-  .success-icon { width: 80px; height: 80px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 20px; }
+  .success-icon  { width: 80px; height: 80px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 20px; }
   .success-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; color: var(--green-dark); }
-  .success-sub { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 32px; }
-  .success-list { background: var(--card); border-radius: 14px; padding: 16px; width: 100%; max-width: 320px; text-align: left; margin-bottom: 24px; }
+  .success-sub   { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 32px; }
+  .success-list  { background: var(--card); border-radius: 14px; padding: 16px; width: 100%; max-width: 320px; text-align: left; margin-bottom: 24px; }
   .success-list-title { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; }
-  .success-list-item { font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+  .success-list-item  { font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
   .success-list-item:last-child { border-bottom: none; }
-  .close-btn { background: var(--green); color: white; border: none; border-radius: 12px; padding: 14px 40px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; }
+  /* 【修正4】成功画面ボタン */
+  .success-buttons { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 320px; }
+  .close-btn { padding: 14px; background: var(--green); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; }
+  .reset-btn { padding: 14px; background: white; color: var(--green-dark); border: 2px solid var(--green); border-radius: 12px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; }
+
   .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); align-items: center; justify-content: center; flex-direction: column; gap: 16px; z-index: 1000; }
   .loading-overlay.show { display: flex; }
   .spinner { width: 44px; height: 44px; border: 4px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; }
@@ -149,11 +126,11 @@
     <button onclick="changeMonth(1)">›</button>
   </div>
   <div class="staff-section">
-    <div class="staff-label">👤 名前</div>
+    <div class="staff-label">名前</div>
     <div id="staff-name" style="font-size:15px;font-weight:700;">読み込み中...</div>
   </div>
   <div class="shift-selector">
-    <div class="shift-selector-label">▼ シフト種別を選んでからカレンダーをタップ</div>
+    <div class="shift-selector-label">シフト種別を選んでからカレンダーをタップ</div>
     <div class="shift-buttons">
       <button class="shift-btn active" data-shift="early" onclick="selectShift('early')">
         <span class="shift-icon">🌅</span><span class="shift-name">早朝</span><span class="shift-time">5:30〜9:00</span>
@@ -184,21 +161,21 @@
 <div class="popup-overlay" id="popup-overlay" onclick="closePopup(event)">
   <div class="popup" onclick="event.stopPropagation()">
     <div class="popup-handle"></div>
-    <div class="popup-title">🛎️ 変則シフト 時間設定</div>
+    <div class="popup-title">変則シフト 時間設定</div>
     <div class="popup-date" id="popup-date"></div>
     <div class="popup-time-row">
       <div class="popup-time-group">
         <label>開始時間</label>
-        <select id="popup-start" onchange="updatePreview()"></select>
+        <input type="time" id="popup-start" value="05:30" oninput="updatePreview()">
       </div>
       <div class="popup-time-group">
         <label>終了時間</label>
-        <select id="popup-end" onchange="updatePreview()"></select>
+        <input type="time" id="popup-end" value="09:00" oninput="updatePreview()">
       </div>
     </div>
-    <div class="popup-preview" id="popup-preview">5:30〜23:00（17.5時間）</div>
+    <div class="popup-preview" id="popup-preview"></div>
     <div class="popup-buttons">
-      <button class="popup-cancel" onclick="cancelPopup()">キャンセル</button>
+      <button class="popup-cancel"  onclick="cancelPopup()">キャンセル</button>
       <button class="popup-confirm" onclick="confirmPopup()">この時間で登録</button>
     </div>
     <button class="popup-delete" id="popup-delete" onclick="deleteDay()" style="display:none">この日のシフトを削除</button>
@@ -210,7 +187,11 @@
   <div class="success-title">送信完了！</div>
   <div class="success-sub">シフト希望を受け付けました。<br>管理者が確認後、シフト表に反映されます。</div>
   <div class="success-list" id="success-list"></div>
-  <button class="close-btn" onclick="closeLiff()">閉じる</button>
+  <!-- 【修正4】ボタン2つ -->
+  <div class="success-buttons">
+    <button class="reset-btn" onclick="resetForm()">別の月を入力する</button>
+    <button class="close-btn" onclick="closeLiff()">閉じる</button>
+  </div>
 </div>
 
 <div class="submit-bar" id="submit-bar">
@@ -223,51 +204,69 @@
 </div>
 
 <script>
-var GAS_URL       = "https://script.google.com/macros/s/AKfycbyXqb62-YkWuC0_zJZEJFCUsQRUStCFbsQ-vUiNAd7StgMGKMnR3XJZx8gYQa-mdLTG/exec";
-var LIFF_ID       = "2010102219-fwHhQc8S";
-var STAFF_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSlpb3LxpCy3edplVyFMLNUbo4gM-8-L_pdezljQVbX3UeynvbHIB114YR5CNUAFZVscWsTjMyU6XZL/pub?gid=0&single=true&output=csv";
+var GAS_URL = "https://script.google.com/macros/s/AKfycbyXqb62-YkWuC0_zJZEJFCUsQRUStCFbsQ-vUiNAd7StgMGKMnR3XJZx8gYQa-mdLTG/exec";
+var LIFF_ID = "2010102219-fwHhQc8S";
 
+// 【修正2】全シフトにstartMin/endMinを統一保持
 var SHIFTS = {
-  early: { label: "早朝",     startH: 5,  startM: 30, endH: 9,  endM: 0,  color: "#F59E0B" },
-  clean: { label: "清掃",     startH: 10, startM: 0,  endH: 15, endM: 0,  color: "#10B981" },
-  front: { label: "変則",     startH: 5,  startM: 30, endH: 23, endM: 0,  color: "#3B82F6" },
-  off:   { label: "休み希望", startH: 0,  startM: 0,  endH: 0,  endM: 0,  color: "#EF4444" }
+  early: { label: "早朝",     startMin: 330,  endMin: 540,  color: "#F59E0B" },
+  clean: { label: "清掃",     startMin: 600,  endMin: 900,  color: "#10B981" },
+  front: { label: "変則",     startMin: 330,  endMin: 1380, color: "#3B82F6" },
+  off:   { label: "休み希望", startMin: 0,    endMin: 0,    color: "#EF4444" }
 };
-var DOW_JP = ["日","月","火","水","木","金","土"];
+
+var DOW_JP        = ["日","月","火","水","木","金","土"];
 var currentYear   = new Date().getFullYear();
 var currentMonth  = new Date().getMonth() + 1;
 var selectedShift = "early";
-// selections: { "2026-06-15": { shiftId, startTime, endTime } }
 var selections    = {};
 var currentStaff  = null;
 var popupDateKey  = null;
 
-// ── 時間オプション生成（30分刻み）─────────────────────────
-function buildTimeOptions(startH, startM, endH, endM) {
-  var opts = [];
-  var start = startH * 60 + startM;
-  var end   = endH   * 60 + endM;
-  for (var m = start; m <= end; m += 30) {
-    var h   = Math.floor(m / 60);
-    var min = m % 60;
-    opts.push({ value: m, label: h + ":" + (min === 0 ? "00" : "30") });
-  }
-  return opts;
-}
+// ── ユーティリティ ────────────────────────────────────────
 
 function minToStr(min) {
   var h = Math.floor(min / 60);
   var m = min % 60;
-  return h + ":" + (m === 0 ? "00" : "30");
+  return h + ":" + (m === 0 ? "00" : String(m).padStart(2, "0"));
+}
+
+// "HH:MM" → 分換算
+function timeStrToMin(str) {
+  if (!str) return null;
+  var parts = str.split(":");
+  return parseInt(parts[0]) * 60 + parseInt(parts[1] || 0);
+}
+
+// 分を "HH:MM" 形式（input[type=time]用、ゼロ埋め）に変換
+function minToTimeInput(min) {
+  var h = Math.floor(min / 60);
+  var m = min % 60;
+  return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+}
+
+// 【修正1】タイムゾーン安全な日付比較
+function isTodayOrFuture(year, month, day) {
+  var t = new Date();
+  var todayY = t.getFullYear();
+  var todayM = t.getMonth() + 1;
+  var todayD = t.getDate();
+  if (year > todayY) return true;
+  if (year === todayY && month > todayM) return true;
+  if (year === todayY && month === todayM && day >= todayD) return true;
+  return false;
+}
+
+function isToday(year, month, day) {
+  var t = new Date();
+  return year === t.getFullYear() && month === t.getMonth() + 1 && day === t.getDate();
 }
 
 // ── LIFF初期化 ────────────────────────────────────────────
 function initLiff() {
   liff.init({ liffId: LIFF_ID }).then(function() {
     if (liff.isLoggedIn()) {
-      liff.getProfile().then(function(profile) {
-        loadStaffByLineId(profile.userId);
-      });
+      loadStaffByIdToken(liff.getIDToken());
     } else {
       liff.login();
     }
@@ -279,37 +278,29 @@ function initLiff() {
   });
 }
 
-function loadStaffByLineId(lineUserId) {
-  fetch(STAFF_CSV_URL)
-    .then(function(res) { return res.text(); })
-    .then(function(text) {
-      var rows  = text.trim().split("\n").slice(1);
-      var found = null;
-      for (var i = 0; i < rows.length; i++) {
-        var cols = rows[i].split(",").map(function(c) { return c.trim().replace(/^"|"$/g, ""); });
-        if (cols[4].trim() === lineUserId.trim()) {
-          found = { id: cols[0], name: cols[1], position: cols[2], wage: cols[3], lineUserId: cols[4] };
-          break;
-        }
-      }
-      if (found) {
-        currentStaff = found;
-        document.getElementById("staff-name").textContent = found.name + "（" + found.position + "）";
-      } else {
-        liff.getProfile().then(function(profile) {
-          currentStaff = { id: lineUserId, name: profile.displayName, position: "" };
-          document.getElementById("staff-name").textContent = profile.displayName;
+function loadStaffByIdToken(idToken) {
+  fetch(GAS_URL + "?action=getStaff&idToken=" + encodeURIComponent(idToken))
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.error) {
+        liff.getProfile().then(function(p) {
+          currentStaff = { id: p.userId, name: p.displayName, position: "" };
+          document.getElementById("staff-name").textContent = p.displayName;
           updateSubmitBtn();
+          renderCalendar();
         });
+        return;
       }
+      currentStaff = data;
+      document.getElementById("staff-name").textContent =
+        data.name + (data.position ? "（" + data.position + "）" : "");
       updateSubmitBtn();
       renderCalendar();
     })
-    .catch(function(e) {
-      console.log("CSV取得エラー:", e);
-      liff.getProfile().then(function(profile) {
-        currentStaff = { id: lineUserId, name: profile.displayName, position: "" };
-        document.getElementById("staff-name").textContent = profile.displayName;
+    .catch(function() {
+      liff.getProfile().then(function(p) {
+        currentStaff = { id: p.userId, name: p.displayName, position: "" };
+        document.getElementById("staff-name").textContent = p.displayName;
         updateSubmitBtn();
         renderCalendar();
       });
@@ -319,15 +310,14 @@ function loadStaffByLineId(lineUserId) {
 // ── 月変更 ────────────────────────────────────────────────
 function changeMonth(delta) {
   currentMonth += delta;
-  if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+  if (currentMonth > 12) { currentMonth = 1;  currentYear++; }
   if (currentMonth < 1)  { currentMonth = 12; currentYear--; }
   renderCalendar();
 }
 
 function selectShift(shiftId) {
   selectedShift = shiftId;
-  var btns = document.querySelectorAll(".shift-btn");
-  for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+  document.querySelectorAll(".shift-btn").forEach(function(b) { b.classList.remove("active"); });
   document.querySelector("[data-shift='" + shiftId + "']").classList.add("active");
 }
 
@@ -335,7 +325,6 @@ function selectShift(shiftId) {
 function renderCalendar() {
   document.getElementById("month-title").textContent = currentYear + "年 " + currentMonth + "月";
   var body     = document.getElementById("calendar-body");
-  var today    = new Date();
   var firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
   var lastDate = new Date(currentYear, currentMonth, 0).getDate();
   body.innerHTML = "";
@@ -347,13 +336,14 @@ function renderCalendar() {
   }
 
   for (var d = 1; d <= lastDate; d++) {
-    var date    = new Date(currentYear, currentMonth - 1, d);
-    var dow     = date.getDay();
-    var mm      = String(currentMonth).padStart(2,"0");
-    var dd      = String(d).padStart(2,"0");
+    var dow     = new Date(currentYear, currentMonth - 1, d).getDay();
+    var mm      = String(currentMonth).padStart(2, "0");
+    var dd      = String(d).padStart(2, "0");
     var dateKey = currentYear + "-" + mm + "-" + dd;
-    var isPast  = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    var isToday = date.toDateString() === today.toDateString();
+
+    // 【修正1】タイムゾーン安全な判定
+    var isPast  = !isTodayOrFuture(currentYear, currentMonth, d);
+    var today   = isToday(currentYear, currentMonth, d);
     var sel     = selections[dateKey];
 
     var el  = document.createElement("div");
@@ -361,45 +351,47 @@ function renderCalendar() {
     if (dow === 0) cls += " sun";
     if (dow === 6) cls += " sat";
     if (isPast)    cls += " past";
-    if (isToday)   cls += " today";
+    if (today)     cls += " today";
     if (sel)       cls += " selected-" + sel.shiftId;
     el.className = cls;
 
     var shiftLabel = "";
     if (sel) {
-      var sh = SHIFTS[sel.shiftId];
       if (sel.shiftId === "front") {
-        shiftLabel = "<div class='day-shift front'>" + sel.startTime + "<br>" + sel.endTime + "</div>";
+        shiftLabel = "<div class='day-shift front'>" + minToStr(sel.startMin) + "<br>" + minToStr(sel.endMin) + "</div>";
+      } else if (sel.shiftId === "off") {
+        shiftLabel = "<div class='day-shift off'>休み希望</div>";
       } else {
-        shiftLabel = "<div class='day-shift " + sel.shiftId + "'>" + sh.label + "</div>";
+        shiftLabel = "<div class='day-shift " + sel.shiftId + "'>" + SHIFTS[sel.shiftId].label + "</div>";
       }
     }
     el.innerHTML = "<div class='day-num'>" + d + "</div>" + shiftLabel;
 
     if (!isPast) {
-      (function(key, dayDow) {
-        el.addEventListener("click", function() { handleDayClick(key, dayDow); });
-      })(dateKey, dow);
+      (function(key) {
+        el.addEventListener("click", function() { handleDayClick(key); });
+      })(dateKey);
     }
     body.appendChild(el);
   }
 }
 
 // ── 日付タップ処理 ────────────────────────────────────────
-function handleDayClick(dateKey, dow) {
+function handleDayClick(dateKey) {
   if (selectedShift === "front") {
-    // 変則シフトはポップアップを表示
-    openPopup(dateKey, dow);
+    openPopup(dateKey);
   } else {
-    // その他はトグル
     if (selections[dateKey] && selections[dateKey].shiftId === selectedShift) {
       delete selections[dateKey];
     } else {
       var sh = SHIFTS[selectedShift];
+      // 【修正2】固定シフトもstartMin/endMinを統一保持
       selections[dateKey] = {
         shiftId:   selectedShift,
-        startTime: sh.startH + ":" + (sh.startM === 0 ? "00" : "30"),
-        endTime:   sh.endH   + ":" + (sh.endM   === 0 ? "00" : "30")
+        startMin:  sh.startMin,
+        endMin:    sh.endMin,
+        startTime: minToStr(sh.startMin),
+        endTime:   minToStr(sh.endMin)
       };
     }
     renderCalendar();
@@ -408,39 +400,21 @@ function handleDayClick(dateKey, dow) {
 }
 
 // ── ポップアップ ──────────────────────────────────────────
-function openPopup(dateKey, dow) {
-  popupDateKey = dateKey;
-  var parts = dateKey.split("-");
-  var dow2  = new Date(dateKey).getDay();
+function openPopup(dateKey) {
+  popupDateKey  = dateKey;
+  var parts     = dateKey.split("-");
+  var dow       = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])).getDay();
   document.getElementById("popup-date").textContent =
-    parseInt(parts[1]) + "月" + parseInt(parts[2]) + "日（" + DOW_JP[dow2] + "）";
+    parseInt(parts[1]) + "月" + parseInt(parts[2]) + "日（" + DOW_JP[dow] + "）";
 
-  // セレクトボックス生成（5:30〜23:00）
-  var opts  = buildTimeOptions(5, 30, 23, 0);
-  var startSel = document.getElementById("popup-start");
-  var endSel   = document.getElementById("popup-end");
-  startSel.innerHTML = "";
-  endSel.innerHTML   = "";
-  for (var i = 0; i < opts.length; i++) {
-    var o1 = document.createElement("option");
-    o1.value = opts[i].value;
-    o1.textContent = opts[i].label;
-    startSel.appendChild(o1);
-    var o2 = document.createElement("option");
-    o2.value = opts[i].value;
-    o2.textContent = opts[i].label;
-    endSel.appendChild(o2);
-  }
-
-  // 既存の設定があれば復元、なければデフォルト
   var existing = selections[dateKey];
   if (existing && existing.shiftId === "front") {
-    startSel.value = existing.startMin !== undefined ? existing.startMin : 5*60+30;
-    endSel.value   = existing.endMin   !== undefined ? existing.endMin   : 23*60;
+    document.getElementById("popup-start").value = minToTimeInput(existing.startMin);
+    document.getElementById("popup-end").value   = minToTimeInput(existing.endMin);
     document.getElementById("popup-delete").style.display = "block";
   } else {
-    startSel.value = 5*60+30;  // 5:30
-    endSel.value   = 23*60;    // 23:00
+    document.getElementById("popup-start").value = "05:30";
+    document.getElementById("popup-end").value   = "09:00";
     document.getElementById("popup-delete").style.display = "none";
   }
 
@@ -448,50 +422,57 @@ function openPopup(dateKey, dow) {
   document.getElementById("popup-overlay").classList.add("show");
 }
 
+// 【修正3】input[type="time"] の値をパースしてプレビュー更新
 function updatePreview() {
-  var startMin = parseInt(document.getElementById("popup-start").value);
-  var endMin   = parseInt(document.getElementById("popup-end").value);
+  var startVal = document.getElementById("popup-start").value;
+  var endVal   = document.getElementById("popup-end").value;
   var preview  = document.getElementById("popup-preview");
 
+  if (!startVal || !endVal) {
+    preview.textContent = "時間を選択してください";
+    preview.className   = "popup-preview error";
+    return;
+  }
+
+  var startMin   = timeStrToMin(startVal);
+  var endMin     = timeStrToMin(endVal);
+
   if (endMin <= startMin) {
-    preview.textContent = "※ 終了時間は開始時間より後にしてください";
-    preview.style.background   = "#FEF2F2";
-    preview.style.color        = "#EF4444";
-    preview.style.borderColor  = "#FCA5A5";
+    preview.textContent = "終了時間は開始時間より後にしてください";
+    preview.className   = "popup-preview error";
     return;
   }
 
   var totalHours = (endMin - startMin) / 60;
-  var text = "";
-
+  var text;
   if (totalHours > 6) {
-    var paidHours = totalHours - 1;
     text = minToStr(startMin) + "〜" + minToStr(endMin) + "\n" +
-           "拘束 " + totalHours.toFixed(1) + "時間" +
-           "（実働 " + paidHours.toFixed(1) + "時間 ＋ 休憩60分）";
+           "拘束 " + totalHours.toFixed(1) + "時間（実働 " + (totalHours - 1).toFixed(1) + "時間 + 休憩60分）";
   } else {
-    text = minToStr(startMin) + "〜" + minToStr(endMin) +
-           "（" + totalHours.toFixed(1) + "時間）";
+    text = minToStr(startMin) + "〜" + minToStr(endMin) + "（" + totalHours.toFixed(1) + "時間）";
   }
 
-  preview.textContent       = text;
-  preview.style.whiteSpace  = "pre-line";
-  preview.style.background  = "#EFF6FF";
-  preview.style.color       = "#1E40AF";
-  preview.style.borderColor = "#BFDBFE";
+  preview.textContent = text;
+  preview.className   = "popup-preview";
 }
 
+// 【修正3】confirmPopupをinput[type="time"]対応に
 function confirmPopup() {
-  var startMin = parseInt(document.getElementById("popup-start").value);
-  var endMin   = parseInt(document.getElementById("popup-end").value);
+  var startVal = document.getElementById("popup-start").value;
+  var endVal   = document.getElementById("popup-end").value;
+  if (!startVal || !endVal) return;
+
+  var startMin = timeStrToMin(startVal);
+  var endMin   = timeStrToMin(endVal);
   if (endMin <= startMin) return;
 
+  // 【修正2】変則シフトもstartMin/endMinを統一保持
   selections[popupDateKey] = {
     shiftId:   "front",
-    startTime: minToStr(startMin),
-    endTime:   minToStr(endMin),
     startMin:  startMin,
-    endMin:    endMin
+    endMin:    endMin,
+    startTime: minToStr(startMin),
+    endTime:   minToStr(endMin)
   };
 
   document.getElementById("popup-overlay").classList.remove("show");
@@ -523,26 +504,25 @@ function updateSubmitBtn() {
   var ok    = currentStaff && count > 0;
   btn.disabled = !ok;
   btn.innerHTML = ok
-    ? "📤 シフト希望を送信 <span class='count-badge'>" + count + "件</span>"
+    ? "シフト希望を送信 <span class='count-badge'>" + count + "件</span>"
     : "シフト希望を送信（日付を選択してください）";
 }
 
 // ── 送信処理 ──────────────────────────────────────────────
 function submitRequests() {
   if (!currentStaff) return;
-  var staffId   = currentStaff.id;
-  var staffName = currentStaff.name;
-  var keys      = Object.keys(selections).sort();
+  var keys = Object.keys(selections).sort();
   if (keys.length === 0) return;
 
   document.getElementById("loading").classList.add("show");
 
-  var rows = keys.map(function(key) {
+  var idToken = liff.getIDToken();
+  var rows    = keys.map(function(key) {
     var sel = selections[key];
     return {
       receivedAt: new Date().toISOString(),
-      staffId:    staffId,
-      name:       staffName,
+      staffId:    currentStaff.id,
+      name:       currentStaff.name,
       date:       key,
       shiftType:  SHIFTS[sel.shiftId].label,
       startTime:  sel.startTime,
@@ -553,47 +533,65 @@ function submitRequests() {
 
   fetch(GAS_URL, {
     method:  "POST",
-    mode:    "no-cors",
     headers: { "Content-Type": "application/json" },
-    body:    JSON.stringify({ type: "shiftRequests", rows: rows })
-  }).catch(function(e) {
-    console.log("送信エラー:", e);
-  }).finally(function() {
+    body:    JSON.stringify({ type: "shiftRequests", idToken: idToken, rows: rows })
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
     document.getElementById("loading").classList.remove("show");
-    showSuccess(staffName, keys);
-    if (liff.isInClient()) {
-      liff.sendMessages([{
-        type: "text",
-        text: "【シフト希望送信完了】\n" + staffName + "\n" +
-          keys.map(function(k) {
-            var p   = k.split("-");
-            var sel = selections[k];
-            return parseInt(p[1]) + "/" + parseInt(p[2]) + " " +
-              SHIFTS[sel.shiftId].label + " " + sel.startTime + "〜" + sel.endTime;
-          }).join("\n")
-      }]).catch(function() {});
+    if (data.result === "success") {
+      showSuccess(currentStaff.name, keys);
+      if (liff.isInClient()) {
+        liff.sendMessages([{
+          type: "text",
+          text: "【シフト希望送信完了】\n" + currentStaff.name + "\n" +
+            keys.map(function(k) {
+              var p   = k.split("-");
+              var sel = selections[k];
+              return parseInt(p[1]) + "/" + parseInt(p[2]) + " " +
+                SHIFTS[sel.shiftId].label + " " + sel.startTime + "〜" + sel.endTime;
+            }).join("\n")
+        }]).catch(function() {});
+      }
+    } else {
+      alert("送信に失敗しました：" + (data.message || "不明なエラー"));
     }
+  })
+  .catch(function(e) {
+    document.getElementById("loading").classList.remove("show");
+    alert("送信エラーが発生しました。再度お試しください。");
+    console.log("送信エラー:", e);
   });
 }
 
 function showSuccess(staffName, keys) {
   var html = keys.map(function(key) {
     var p   = key.split("-");
-    var dow = new Date(key).getDay();
+    var dow = new Date(parseInt(p[0]), parseInt(p[1]) - 1, parseInt(p[2])).getDay();
     var sel = selections[key];
     var sh  = SHIFTS[sel.shiftId];
     return "<div class='success-list-item'>" +
       "<span>" + parseInt(p[1]) + "月" + parseInt(p[2]) + "日（" + DOW_JP[dow] + "）</span>" +
-      "<span style='color:" + sh.color + ";font-weight:700'>" +
-        sh.label + " " + sel.startTime + "〜" + sel.endTime +
-      "</span></div>";
+      "<span style='color:" + sh.color + ";font-weight:700'>" + sh.label + " " + sel.startTime + "〜" + sel.endTime + "</span>" +
+      "</div>";
   }).join("");
 
   document.getElementById("success-list").innerHTML =
-    "<div class='success-list-title'>📋 " + staffName + "さんの送信内容</div>" + html;
+    "<div class='success-list-title'>" + staffName + "さんの送信内容</div>" + html;
   document.getElementById("main-screen").style.display = "none";
   document.getElementById("submit-bar").style.display  = "none";
   document.getElementById("success-screen").classList.add("show");
+}
+
+// 【修正4】フォームリセット・メイン画面に戻る
+function resetForm() {
+  selections = {};
+  document.getElementById("success-screen").classList.remove("show");
+  document.getElementById("main-screen").style.display = "block";
+  document.getElementById("submit-bar").style.display  = "block";
+  updateSubmitBtn();
+  renderCalendar();
+  window.scrollTo(0, 0);
 }
 
 function closeLiff() {
@@ -601,6 +599,7 @@ function closeLiff() {
   else window.close();
 }
 
+// ── 起動 ─────────────────────────────────────────────────
 initLiff();
 </script>
 </body>
