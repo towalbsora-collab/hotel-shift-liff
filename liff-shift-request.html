@@ -279,10 +279,13 @@ function initLiff() {
 }
 
 function loadStaffByIdToken(idToken) {
+  console.log("idToken取得:", idToken ? "あり" : "なし");
   fetch(GAS_URL + "?action=getStaff&idToken=" + encodeURIComponent(idToken))
     .then(function(res) { return res.json(); })
     .then(function(data) {
+      console.log("GASレスポンス:", JSON.stringify(data));
       if (data.error) {
+        console.log("エラー理由:", data.error);
         liff.getProfile().then(function(p) {
           currentStaff = { id: p.userId, name: p.displayName, position: "" };
           document.getElementById("staff-name").textContent = p.displayName;
@@ -297,7 +300,8 @@ function loadStaffByIdToken(idToken) {
       updateSubmitBtn();
       renderCalendar();
     })
-    .catch(function() {
+    .catch(function(e) {
+      console.log("fetchエラー:", e);
       liff.getProfile().then(function(p) {
         currentStaff = { id: p.userId, name: p.displayName, position: "" };
         document.getElementById("staff-name").textContent = p.displayName;
