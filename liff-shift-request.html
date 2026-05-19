@@ -627,7 +627,7 @@ function submitRequests() {
 
   fetch(GAS_URL, {
     method:  "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain" },
     body:    JSON.stringify({ type: "shiftRequests", idToken: idToken, rows: rows })
   })
   .then(function(res) { return res.json(); })
