@@ -135,7 +135,7 @@
         <span class="shift-icon">🧹</span><span class="shift-name">清掃</span><span class="shift-time">10:00〜15:00</span>
       </button>
       <button class="shift-btn" data-shift="front" onclick="selectShift('front')">
-        <span class="shift-icon">🛎️</span><span class="shift-name">変則</span><span class="shift-time" id="front-time-label">時間設定あり</span>
+        <span class="shift-icon">🛎️</span><span class="shift-name">手動</span><span class="shift-time" id="front-time-label">時間設定あり</span>
       </button>
       <button class="shift-btn" data-shift="off" onclick="selectShift('off')">
         <span class="shift-icon">🌙</span><span class="shift-name">休み希望</span><span class="shift-time">—</span>
@@ -153,11 +153,11 @@
   </div>
 </div>
 
-<!-- 変則シフト時間設定ポップアップ -->
+<!-- 手動シフト時間設定ポップアップ -->
 <div class="popup-overlay" id="popup-overlay" onclick="closePopup(event)">
   <div class="popup" onclick="event.stopPropagation()">
     <div class="popup-handle"></div>
-    <div class="popup-title">変則シフト 時間設定</div>
+    <div class="popup-title">手動シフト 時間設定</div>
     <div class="popup-date" id="popup-date"></div>
     <div class="popup-time-row">
       <div class="popup-time-group">
@@ -206,14 +206,14 @@ var LIFF_ID = "2010102219-fwHhQc8S";
 var SHIFT_LABEL_TO_ID = {
   "早朝": "early",
   "清掃": "clean",
-  "変則": "front",
+  "手動": "front",
   "休み希望": "off"
 };
 
 var SHIFTS = {
   early: { label: "早朝",     startMin: 330,  endMin: 540,  color: "#F59E0B" },
   clean: { label: "清掃",     startMin: 600,  endMin: 900,  color: "#10B981" },
-  front: { label: "変則",     startMin: 330,  endMin: 1380, color: "#3B82F6" },
+  front: { label: "手動",     startMin: 330,  endMin: 1380, color: "#3B82F6" },
   off:   { label: "休み希望", startMin: 0,    endMin: 0,    color: "#EF4444" }
 };
 
@@ -306,7 +306,7 @@ function loadStaffByIdToken(idToken) {
 
       currentStaff = data;
       document.getElementById("staff-name").textContent =
-        data.name + (data.position ? "（" + data.position + "）" : "");
+        data.name;
 
       // 締め切り状態を表示
       isAccepting = data.isAccepting !== false;
@@ -321,17 +321,11 @@ function loadStaffByIdToken(idToken) {
         banner.textContent   = "提出期限：毎月" + data.deadlineDay + "日まで";
       }
 
-      // 前回提出データを復元
-      debugLog("previousData件数:" + (data.previousData ? data.previousData.length : 0));
-      if (data.previousData && data.previousData.length > 0) {
-        restorePreviousData(data.previousData);
-        debugLog("復元後selections件数:" + Object.keys(selections).length);
-      }
-
       updateSubmitBtn();
       renderCalendar();
     })
-    .catch(function() {
+    .catch(function(e) {
+      debugLog("staffフェッチエラー:" + e);
       liff.getProfile().then(function(p) {
         currentStaff = { id: p.userId, name: p.displayName, position: "" };
         document.getElementById("staff-name").textContent = p.displayName;
@@ -342,32 +336,6 @@ function loadStaffByIdToken(idToken) {
 }
 
 // 【修正3】前回データをselectionsに復元
-function restorePreviousData(previousData) {
-  previousData.forEach(function(row) {
-    var shiftId = SHIFT_LABEL_TO_ID[row.shiftType];
-    if (!shiftId) return;
-
-    var startMin = timeStrToMin(row.startTime);
-    var endMin   = timeStrToMin(row.endTime);
-
-    // 変則シフトの場合、保持時間も更新
-    if (shiftId === "front" && startMin !== null && endMin !== null) {
-      SHIFTS.front.startMin = startMin;
-      SHIFTS.front.endMin   = endMin;
-      frontTimeSet          = true;
-      updateFrontLabel();
-    }
-
-    selections[row.date] = {
-      shiftId:   shiftId,
-      startMin:  startMin !== null ? startMin : SHIFTS[shiftId].startMin,
-      endMin:    endMin   !== null ? endMin   : SHIFTS[shiftId].endMin,
-      startTime: row.startTime,
-      endTime:   row.endTime
-    };
-  });
-}
-
 // ── 月変更 ────────────────────────────────────────────────
 function changeMonth(delta) {
   currentMonth += delta;
@@ -533,6 +501,7 @@ function updatePreview() {
 }
 
 function confirmPopup() {
+  if (!popupDateKey) return;
   var startVal = document.getElementById("popup-start").value;
   var endVal   = document.getElementById("popup-end").value;
   if (!startVal || !endVal) return;
@@ -541,7 +510,6 @@ function confirmPopup() {
   var endMin   = timeStrToMin(endVal);
   if (endMin <= startMin) return;
 
-  // 【修正2】SHIFTSに時間を保持してスタンプ化
   SHIFTS.front.startMin = startMin;
   SHIFTS.front.endMin   = endMin;
   frontTimeSet          = true;
@@ -571,6 +539,7 @@ function closePopup(event) {
 }
 
 function deleteDay() {
+  if (!popupDateKey) return;
   delete selections[popupDateKey];
   document.getElementById("popup-overlay").classList.remove("show");
   renderCalendar();
