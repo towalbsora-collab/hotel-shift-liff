@@ -25,6 +25,8 @@
   .month-title { font-size: 17px; font-weight: 700; }
   .staff-section { padding: 14px 16px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
   .staff-label { font-size: 13px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+  .deadline-banner { padding: 10px 16px; background: #FEF3C7; border-bottom: 1px solid #FDE68A; font-size: 12px; font-weight: 700; color: #92400E; text-align: center; }
+  .deadline-banner.closed { background: #FEE2E2; border-color: #FCA5A5; color: #991B1B; }
   .shift-selector { padding: 14px 16px; background: var(--card); border-bottom: 2px solid var(--border); }
   .shift-selector-label { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; }
   .shift-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -58,8 +60,6 @@
   .day-shift.clean { background: #D1FAE5; color: #065F46; }
   .day-shift.front { background: #DBEAFE; color: #1E40AF; }
   .day-shift.off   { background: #FEE2E2; color: #991B1B; }
-
-  /* ポップアップ */
   .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center; z-index: 500; }
   .popup-overlay.show { display: flex; }
   .popup { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px 20px 40px; width: 100%; max-width: 480px; box-shadow: 0 -4px 24px rgba(0,0,0,0.15); animation: slideUp 0.2s ease; }
@@ -69,7 +69,6 @@
   .popup-date  { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
   .popup-time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
   .popup-time-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
-  /* 【修正3】input[type="time"] スタイル */
   .popup-time-group input[type="time"] {
     width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px;
     font-size: 16px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
@@ -83,12 +82,10 @@
   .popup-cancel  { padding: 14px; border: 2px solid var(--border); background: var(--bg); border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; color: var(--text-muted); }
   .popup-confirm { padding: 14px; border: none; background: #3B82F6; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; color: white; }
   .popup-delete  { width: 100%; padding: 12px; border: none; background: #FEF2F2; border-radius: 12px; font-size: 13px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; color: #EF4444; margin-top: 8px; }
-
   .submit-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: rgba(240,244,240,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); }
   .submit-btn { width: 100%; padding: 16px; background: var(--green); color: white; border: none; border-radius: 14px; font-size: 16px; font-weight: 900; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .submit-btn:disabled { background: #CCC; cursor: not-allowed; }
   .submit-btn .count-badge { background: rgba(255,255,255,0.3); border-radius: 20px; padding: 2px 10px; font-size: 13px; }
-
   .success-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 24px; text-align: center; }
   .success-screen.show { display: flex; }
   .success-icon  { width: 80px; height: 80px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 20px; }
@@ -98,11 +95,9 @@
   .success-list-title { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; }
   .success-list-item  { font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
   .success-list-item:last-child { border-bottom: none; }
-  /* 【修正4】成功画面ボタン */
   .success-buttons { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 320px; }
   .close-btn { padding: 14px; background: var(--green); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; }
   .reset-btn { padding: 14px; background: white; color: var(--green-dark); border: 2px solid var(--green); border-radius: 12px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; }
-
   .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); align-items: center; justify-content: center; flex-direction: column; gap: 16px; z-index: 1000; }
   .loading-overlay.show { display: flex; }
   .spinner { width: 44px; height: 44px; border: 4px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; }
@@ -120,6 +115,7 @@
     </div>
     <div class="header-sub">希望日をカレンダーで選んで送信してください</div>
   </div>
+  <div id="deadline-banner" class="deadline-banner" style="display:none"></div>
   <div class="month-nav">
     <button onclick="changeMonth(-1)">‹</button>
     <div class="month-title" id="month-title"></div>
@@ -139,7 +135,7 @@
         <span class="shift-icon">🧹</span><span class="shift-name">清掃</span><span class="shift-time">10:00〜15:00</span>
       </button>
       <button class="shift-btn" data-shift="front" onclick="selectShift('front')">
-        <span class="shift-icon">🛎️</span><span class="shift-name">変則</span><span class="shift-time">時間設定あり</span>
+        <span class="shift-icon">🛎️</span><span class="shift-name">変則</span><span class="shift-time" id="front-time-label">時間設定あり</span>
       </button>
       <button class="shift-btn" data-shift="off" onclick="selectShift('off')">
         <span class="shift-icon">🌙</span><span class="shift-name">休み希望</span><span class="shift-time">—</span>
@@ -166,11 +162,11 @@
     <div class="popup-time-row">
       <div class="popup-time-group">
         <label>開始時間</label>
-        <input type="time" id="popup-start" value="05:30" step="600" oninput="updatePreview()">
+        <input type="time" id="popup-start" value="05:30" oninput="updatePreview()">
       </div>
       <div class="popup-time-group">
         <label>終了時間</label>
-        <input type="time" id="popup-end" value="09:00" step="600" oninput="updatePreview()">
+        <input type="time" id="popup-end" value="09:00" oninput="updatePreview()">
       </div>
     </div>
     <div class="popup-preview" id="popup-preview"></div>
@@ -187,7 +183,6 @@
   <div class="success-title">送信完了！</div>
   <div class="success-sub">シフト希望を受け付けました。<br>管理者が確認後、シフト表に反映されます。</div>
   <div class="success-list" id="success-list"></div>
-  <!-- 【修正4】ボタン2つ -->
   <div class="success-buttons">
     <button class="reset-btn" onclick="resetForm()">別の月を入力する</button>
     <button class="close-btn" onclick="closeLiff()">閉じる</button>
@@ -207,7 +202,14 @@
 var GAS_URL = "https://script.google.com/macros/s/AKfycbyXqb62-YkWuC0_zJZEJFCUsQRUStCFbsQ-vUiNAd7StgMGKMnR3XJZx8gYQa-mdLTG/exec";
 var LIFF_ID = "2010102219-fwHhQc8S";
 
-// 【修正2】全シフトにstartMin/endMinを統一保持
+// shiftTypeの文字列→shiftIdへの変換マップ
+var SHIFT_LABEL_TO_ID = {
+  "早朝": "early",
+  "清掃": "clean",
+  "変則": "front",
+  "休み希望": "off"
+};
+
 var SHIFTS = {
   early: { label: "早朝",     startMin: 330,  endMin: 540,  color: "#F59E0B" },
   clean: { label: "清掃",     startMin: 600,  endMin: 900,  color: "#10B981" },
@@ -216,50 +218,59 @@ var SHIFTS = {
 };
 
 var DOW_JP        = ["日","月","火","水","木","金","土"];
-var currentYear   = new Date().getFullYear();
-var currentMonth  = new Date().getMonth() + 1;
-var selectedShift = "early";
-var selections    = {};
-var currentStaff  = null;
-var popupDateKey  = null;
+// 【修正1】初期表示を翌月に
+var _now          = new Date();
+var currentYear   = _now.getMonth() === 11 ? _now.getFullYear() + 1 : _now.getFullYear();
+var currentMonth  = _now.getMonth() === 11 ? 1 : _now.getMonth() + 2;
+
+var selectedShift    = "early";
+var selections       = {};
+var currentStaff     = null;
+var popupDateKey     = null;
+var isAccepting      = true;  // 締め切り状態
+// 【修正2】変則シフトの確定時間（初回設定後に保持）
+var frontTimeSet     = false; // 変則時間が設定済みかどうか
 
 // ── ユーティリティ ────────────────────────────────────────
-
 function minToStr(min) {
   var h = Math.floor(min / 60);
   var m = min % 60;
   return h + ":" + (m === 0 ? "00" : String(m).padStart(2, "0"));
 }
 
-// "HH:MM" → 分換算
 function timeStrToMin(str) {
   if (!str) return null;
   var parts = str.split(":");
   return parseInt(parts[0]) * 60 + parseInt(parts[1] || 0);
 }
 
-// 分を "HH:MM" 形式（input[type=time]用、ゼロ埋め）に変換
 function minToTimeInput(min) {
   var h = Math.floor(min / 60);
   var m = min % 60;
   return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
 }
 
-// 【修正1】タイムゾーン安全な日付比較
 function isTodayOrFuture(year, month, day) {
   var t = new Date();
-  var todayY = t.getFullYear();
-  var todayM = t.getMonth() + 1;
-  var todayD = t.getDate();
-  if (year > todayY) return true;
-  if (year === todayY && month > todayM) return true;
-  if (year === todayY && month === todayM && day >= todayD) return true;
+  if (year > t.getFullYear()) return true;
+  if (year === t.getFullYear() && month > t.getMonth() + 1) return true;
+  if (year === t.getFullYear() && month === t.getMonth() + 1 && day >= t.getDate()) return true;
   return false;
 }
 
 function isToday(year, month, day) {
   var t = new Date();
   return year === t.getFullYear() && month === t.getMonth() + 1 && day === t.getDate();
+}
+
+// 【修正2】変則ボタンのラベルを更新
+function updateFrontLabel() {
+  var label = document.getElementById("front-time-label");
+  if (frontTimeSet) {
+    label.textContent = minToStr(SHIFTS.front.startMin) + "〜" + minToStr(SHIFTS.front.endMin);
+  } else {
+    label.textContent = "時間設定あり";
+  }
 }
 
 // ── LIFF初期化 ────────────────────────────────────────────
@@ -291,9 +302,29 @@ function loadStaffByIdToken(idToken) {
         });
         return;
       }
+
       currentStaff = data;
       document.getElementById("staff-name").textContent =
         data.name + (data.position ? "（" + data.position + "）" : "");
+
+      // 締め切り状態を表示
+      isAccepting = data.isAccepting !== false;
+      var banner  = document.getElementById("deadline-banner");
+      if (!isAccepting) {
+        banner.style.display = "block";
+        banner.className     = "deadline-banner closed";
+        banner.textContent   = "今月の提出期限は終了しました";
+      } else if (data.deadlineDay) {
+        banner.style.display = "block";
+        banner.className     = "deadline-banner";
+        banner.textContent   = "提出期限：毎月" + data.deadlineDay + "日まで";
+      }
+
+      // 【修正3】前回提出データを復元
+      if (data.previousData && data.previousData.length > 0) {
+        restorePreviousData(data.previousData);
+      }
+
       updateSubmitBtn();
       renderCalendar();
     })
@@ -305,6 +336,33 @@ function loadStaffByIdToken(idToken) {
         renderCalendar();
       });
     });
+}
+
+// 【修正3】前回データをselectionsに復元
+function restorePreviousData(previousData) {
+  previousData.forEach(function(row) {
+    var shiftId = SHIFT_LABEL_TO_ID[row.shiftType];
+    if (!shiftId) return;
+
+    var startMin = timeStrToMin(row.startTime);
+    var endMin   = timeStrToMin(row.endTime);
+
+    // 変則シフトの場合、保持時間も更新
+    if (shiftId === "front" && startMin !== null && endMin !== null) {
+      SHIFTS.front.startMin = startMin;
+      SHIFTS.front.endMin   = endMin;
+      frontTimeSet          = true;
+      updateFrontLabel();
+    }
+
+    selections[row.date] = {
+      shiftId:   shiftId,
+      startMin:  startMin !== null ? startMin : SHIFTS[shiftId].startMin,
+      endMin:    endMin   !== null ? endMin   : SHIFTS[shiftId].endMin,
+      startTime: row.startTime,
+      endTime:   row.endTime
+    };
+  });
 }
 
 // ── 月変更 ────────────────────────────────────────────────
@@ -340,8 +398,6 @@ function renderCalendar() {
     var mm      = String(currentMonth).padStart(2, "0");
     var dd      = String(d).padStart(2, "0");
     var dateKey = currentYear + "-" + mm + "-" + dd;
-
-    // 【修正1】タイムゾーン安全な判定
     var isPast  = !isTodayOrFuture(currentYear, currentMonth, d);
     var today   = isToday(currentYear, currentMonth, d);
     var sel     = selections[dateKey];
@@ -367,7 +423,7 @@ function renderCalendar() {
     }
     el.innerHTML = "<div class='day-num'>" + d + "</div>" + shiftLabel;
 
-    if (!isPast) {
+    if (!isPast && isAccepting) {
       (function(key) {
         el.addEventListener("click", function() { handleDayClick(key); });
       })(dateKey);
@@ -379,13 +435,31 @@ function renderCalendar() {
 // ── 日付タップ処理 ────────────────────────────────────────
 function handleDayClick(dateKey) {
   if (selectedShift === "front") {
-    openPopup(dateKey);
+    // 【修正2】変則：既存データがある場合またはタップ済み日はポップアップ
+    // 初回かつ時間未設定の場合もポップアップ
+    if (!frontTimeSet || (selections[dateKey] && selections[dateKey].shiftId === "front")) {
+      openPopup(dateKey);
+    } else {
+      // 時間設定済み → スタンプ入力
+      if (selections[dateKey] && selections[dateKey].shiftId === "front") {
+        delete selections[dateKey];
+      } else {
+        selections[dateKey] = {
+          shiftId:   "front",
+          startMin:  SHIFTS.front.startMin,
+          endMin:    SHIFTS.front.endMin,
+          startTime: minToStr(SHIFTS.front.startMin),
+          endTime:   minToStr(SHIFTS.front.endMin)
+        };
+      }
+      renderCalendar();
+      updateSubmitBtn();
+    }
   } else {
     if (selections[dateKey] && selections[dateKey].shiftId === selectedShift) {
       delete selections[dateKey];
     } else {
       var sh = SHIFTS[selectedShift];
-      // 【修正2】固定シフトもstartMin/endMinを統一保持
       selections[dateKey] = {
         shiftId:   selectedShift,
         startMin:  sh.startMin,
@@ -413,8 +487,8 @@ function openPopup(dateKey) {
     document.getElementById("popup-end").value   = minToTimeInput(existing.endMin);
     document.getElementById("popup-delete").style.display = "block";
   } else {
-    document.getElementById("popup-start").value = "05:30";
-    document.getElementById("popup-end").value   = "09:00";
+    document.getElementById("popup-start").value = minToTimeInput(SHIFTS.front.startMin);
+    document.getElementById("popup-end").value   = minToTimeInput(SHIFTS.front.endMin);
     document.getElementById("popup-delete").style.display = "none";
   }
 
@@ -422,7 +496,6 @@ function openPopup(dateKey) {
   document.getElementById("popup-overlay").classList.add("show");
 }
 
-// 【修正3】input[type="time"] の値をパースしてプレビュー更新
 function updatePreview() {
   var startVal = document.getElementById("popup-start").value;
   var endVal   = document.getElementById("popup-end").value;
@@ -456,7 +529,6 @@ function updatePreview() {
   preview.className   = "popup-preview";
 }
 
-// 【修正3】confirmPopupをinput[type="time"]対応に
 function confirmPopup() {
   var startVal = document.getElementById("popup-start").value;
   var endVal   = document.getElementById("popup-end").value;
@@ -466,7 +538,12 @@ function confirmPopup() {
   var endMin   = timeStrToMin(endVal);
   if (endMin <= startMin) return;
 
-  // 【修正2】変則シフトもstartMin/endMinを統一保持
+  // 【修正2】SHIFTSに時間を保持してスタンプ化
+  SHIFTS.front.startMin = startMin;
+  SHIFTS.front.endMin   = endMin;
+  frontTimeSet          = true;
+  updateFrontLabel();
+
   selections[popupDateKey] = {
     shiftId:   "front",
     startMin:  startMin,
@@ -501,16 +578,20 @@ function deleteDay() {
 function updateSubmitBtn() {
   var btn   = document.getElementById("submit-btn");
   var count = Object.keys(selections).length;
-  var ok    = currentStaff && count > 0;
+  var ok    = currentStaff && count > 0 && isAccepting;
   btn.disabled = !ok;
-  btn.innerHTML = ok
-    ? "シフト希望を送信 <span class='count-badge'>" + count + "件</span>"
-    : "シフト希望を送信（日付を選択してください）";
+  if (!isAccepting) {
+    btn.innerHTML = "提出期限が終了しました";
+  } else {
+    btn.innerHTML = ok
+      ? "シフト希望を送信 <span class='count-badge'>" + count + "件</span>"
+      : "シフト希望を送信（日付を選択してください）";
+  }
 }
 
 // ── 送信処理 ──────────────────────────────────────────────
 function submitRequests() {
-  if (!currentStaff) return;
+  if (!currentStaff || !isAccepting) return;
   var keys = Object.keys(selections).sort();
   if (keys.length === 0) return;
 
@@ -583,9 +664,10 @@ function showSuccess(staffName, keys) {
   document.getElementById("success-screen").classList.add("show");
 }
 
-// 【修正4】フォームリセット・メイン画面に戻る
 function resetForm() {
-  selections = {};
+  selections   = {};
+  frontTimeSet = false;
+  updateFrontLabel();
   document.getElementById("success-screen").classList.remove("show");
   document.getElementById("main-screen").style.display = "block";
   document.getElementById("submit-bar").style.display  = "block";
@@ -599,7 +681,6 @@ function closeLiff() {
   else window.close();
 }
 
-// ── 起動 ─────────────────────────────────────────────────
 initLiff();
 </script>
 </body>
