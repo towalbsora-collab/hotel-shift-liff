@@ -201,6 +201,12 @@
 </div>
 
 <script>
+// 即時実行デバッグ
+window.addEventListener('DOMContentLoaded', function() {
+  var el = document.getElementById("debug-log");
+  if (el) { el.style.display = "block"; el.innerHTML += "DOM読み込み完了<br>"; }
+});
+
 var GAS_URL = "https://script.google.com/macros/s/AKfycbyXqb62-YkWuC0_zJZEJFCUsQRUStCFbsQ-vUiNAd7StgMGKMnR3XJZx8gYQa-mdLTG/exec";
 var LIFF_ID = "2010102219-fwHhQc8S";
 
