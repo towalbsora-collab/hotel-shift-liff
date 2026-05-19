@@ -285,13 +285,16 @@ function debugLog(msg) {
 // ── LIFF初期化 ────────────────────────────────────────────
 function initLiff() {
   liff.init({ liffId: LIFF_ID }).then(function() {
+    debugLog("LIFF起動OK");
     if (liff.isLoggedIn()) {
+      debugLog("ログイン済み→スタッフ取得");
       loadStaffByIdToken(liff.getIDToken());
     } else {
+      debugLog("未ログイン→login()");
       liff.login();
     }
   }).catch(function(e) {
-    console.log("LIFF初期化エラー:", e);
+    debugLog("LIFF初期化エラー:" + e);
     currentStaff = { id: "preview", name: "プレビューモード", position: "" };
     document.getElementById("staff-name").textContent = "プレビューモード";
     renderCalendar();
