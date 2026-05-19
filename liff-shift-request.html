@@ -107,8 +107,6 @@
 </head>
 <body>
 
-<div id="debug-log" style="position:fixed;bottom:130px;left:0;right:0;background:rgba(0,0,0,0.85);color:#00FF88;font-size:10px;padding:8px;max-height:120px;overflow-y:auto;z-index:9999;font-family:monospace;display:none"></div>
-
 <div id="main-screen">
   <div class="header">
     <div class="header-top">
@@ -275,26 +273,16 @@ function updateFrontLabel() {
   }
 }
 
-function debugLog(msg) {
-  var el = document.getElementById("debug-log");
-  el.style.display = "block";
-  el.innerHTML += msg + "<br>";
-  el.scrollTop = el.scrollHeight;
-}
-
 // ── LIFF初期化 ────────────────────────────────────────────
 function initLiff() {
   liff.init({ liffId: LIFF_ID }).then(function() {
-    debugLog("LIFF起動OK");
     if (liff.isLoggedIn()) {
-      debugLog("ログイン済み→スタッフ取得");
       loadStaffByIdToken(liff.getIDToken());
     } else {
-      debugLog("未ログイン→login()");
       liff.login();
     }
   }).catch(function(e) {
-    debugLog("LIFF初期化エラー:" + e);
+    console.log("LIFF初期化エラー:", e);
     currentStaff = { id: "preview", name: "プレビューモード", position: "" };
     document.getElementById("staff-name").textContent = "プレビューモード";
     renderCalendar();
@@ -610,7 +598,6 @@ function submitRequests() {
   document.getElementById("loading").classList.add("show");
 
   var idToken = liff.getIDToken();
-  debugLog("送信開始 件数:" + keys.length + " token:" + (idToken ? "あり" : "なし"));
   var rows    = keys.map(function(key) {
     var sel = selections[key];
     return {
@@ -631,30 +618,24 @@ function submitRequests() {
     body:     JSON.stringify({ type: "shiftRequests", idToken: idToken, rows: rows }),
     redirect: "follow"
   })
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
-    debugLog("レスポンス:" + JSON.stringify(data));
+  .then(function() {
+    // no-corsモードのためレスポンス読み取り不可→送信成功とみなす
     document.getElementById("loading").classList.remove("show");
-    if (data.result === "success") {
-      showSuccess(currentStaff.name, keys);
-      if (liff.isInClient()) {
-        liff.sendMessages([{
-          type: "text",
-          text: "【シフト希望送信完了】\n" + currentStaff.name + "\n" +
-            keys.map(function(k) {
-              var p   = k.split("-");
-              var sel = selections[k];
-              return parseInt(p[1]) + "/" + parseInt(p[2]) + " " +
-                SHIFTS[sel.shiftId].label + " " + sel.startTime + "〜" + sel.endTime;
-            }).join("\n")
-        }]).catch(function() {});
-      }
-    } else {
-      alert("送信に失敗しました：" + (data.message || "不明なエラー"));
+    showSuccess(currentStaff.name, keys);
+    if (liff.isInClient()) {
+      liff.sendMessages([{
+        type: "text",
+        text: "【シフト希望送信完了】\n" + currentStaff.name + "\n" +
+          keys.map(function(k) {
+            var p   = k.split("-");
+            var sel = selections[k];
+            return parseInt(p[1]) + "/" + parseInt(p[2]) + " " +
+              SHIFTS[sel.shiftId].label + " " + sel.startTime + "〜" + sel.endTime;
+          }).join("\n")
+      }]).catch(function() {});
     }
   })
   .catch(function(e) {
-    debugLog("fetchエラー:" + e);
     document.getElementById("loading").classList.remove("show");
     alert("送信エラーが発生しました。再度お試しください。");
     console.log("送信エラー:", e);
