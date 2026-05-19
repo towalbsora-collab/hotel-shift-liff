@@ -293,6 +293,7 @@ function loadStaffByIdToken(idToken) {
   fetch(GAS_URL + "?action=getStaff&idToken=" + encodeURIComponent(idToken))
     .then(function(res) { return res.json(); })
     .then(function(data) {
+      debugLog("staff:" + JSON.stringify(data).substring(0, 150));
       if (data.error) {
         liff.getProfile().then(function(p) {
           currentStaff = { id: p.userId, name: p.displayName, position: "" };
@@ -320,9 +321,11 @@ function loadStaffByIdToken(idToken) {
         banner.textContent   = "提出期限：毎月" + data.deadlineDay + "日まで";
       }
 
-      // 【修正3】前回提出データを復元
+      // 前回提出データを復元
+      debugLog("previousData件数:" + (data.previousData ? data.previousData.length : 0));
       if (data.previousData && data.previousData.length > 0) {
         restorePreviousData(data.previousData);
+        debugLog("復元後selections件数:" + Object.keys(selections).length);
       }
 
       updateSubmitBtn();
