@@ -626,33 +626,38 @@ function submitRequests() {
   });
 
   fetch(GAS_URL, {
-    method:  "POST",
-    headers: { "Content-Type": "text/plain" },
-    body:    JSON.stringify({ type: "shiftRequests", idToken: idToken, rows: rows }),
-    mode:    "no-cors"
+    method:   "POST",
+    headers:  { "Content-Type": "text/plain;charset=utf-8" },
+    body:     JSON.stringify({ type: "shiftRequests", idToken: idToken, rows: rows }),
+    redirect: "follow"
   })
-  .then(function() {
-    // no-corsの場合レスポンスが読めないので成功とみなす
-    debugLog("送信完了（no-cors）");
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    debugLog("レスポンス:" + JSON.stringify(data));
     document.getElementById("loading").classList.remove("show");
-    showSuccess(currentStaff.name, keys);
-    if (liff.isInClient()) {
-      liff.sendMessages([{
-        type: "text",
-        text: "【シフト希望送信完了】\n" + currentStaff.name + "\n" +
-          keys.map(function(k) {
-            var p   = k.split("-");
-            var sel = selections[k];
-            return parseInt(p[1]) + "/" + parseInt(p[2]) + " " +
-              SHIFTS[sel.shiftId].label + " " + sel.startTime + "〜" + sel.endTime;
-          }).join("\n")
-      }]).catch(function() {});
+    if (data.result === "success") {
+      showSuccess(currentStaff.name, keys);
+      if (liff.isInClient()) {
+        liff.sendMessages([{
+          type: "text",
+          text: "【シフト希望送信完了】\n" + currentStaff.name + "\n" +
+            keys.map(function(k) {
+              var p   = k.split("-");
+              var sel = selections[k];
+              return parseInt(p[1]) + "/" + parseInt(p[2]) + " " +
+                SHIFTS[sel.shiftId].label + " " + sel.startTime + "〜" + sel.endTime;
+            }).join("\n")
+        }]).catch(function() {});
+      }
+    } else {
+      alert("送信に失敗しました：" + (data.message || "不明なエラー"));
     }
   })
   .catch(function(e) {
     debugLog("fetchエラー:" + e);
     document.getElementById("loading").classList.remove("show");
     alert("送信エラーが発生しました。再度お試しください。");
+    console.log("送信エラー:", e);
   });
 }
 
